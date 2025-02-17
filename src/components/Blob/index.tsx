@@ -4,10 +4,20 @@ import * as THREE from "three"; // Import Three.js
 import { MathUtils } from "three";
 import fragmentShader from "./fragmentShader";
 import vertexShader from "./vertexShader";
+import { MotionValue } from "motion/react";
 
 extend({ IcosahedronBufferGeometry: THREE.IcosahedronGeometry });
 
-const Blob = ({ scale = 1 }: { scale?: number }) => {
+const Blob = ({
+  scaleValue,
+  rotationValue,
+  meshCallback,
+}: {
+  scaleValue: MotionValue<number>;
+  rotationValue?: MotionValue<number>;
+  meshCallback?: (material: THREE.ShaderMaterial) => void;
+}) => {
+  console.log("scaleValue", scaleValue);
   const mesh = useRef<THREE.Mesh | null>(null);
   const hover = useRef(false);
   const uniforms = useMemo(() => {
@@ -28,7 +38,7 @@ const Blob = ({ scale = 1 }: { scale?: number }) => {
 
       material.uniforms.u_intensity.value = MathUtils.lerp(
         material.uniforms.u_intensity.value,
-        hover.current ? 1 : 0.15,
+        hover.current ? 1 : 0.2,
         0.02
       );
 
@@ -45,14 +55,28 @@ const Blob = ({ scale = 1 }: { scale?: number }) => {
 
       // Ensure shader detects the change
       material.needsUpdate = true;
+
+      if (meshCallback) meshCallback(material);
+
+      if (scaleValue) {
+        mesh.current.scale.set(
+          scaleValue.get(),
+          scaleValue.get(),
+          scaleValue.get()
+        );
+      }
+      if (rotationValue) {
+        mesh.current.rotation.y = rotationValue.get(); // Rotate around Y-axis
+        mesh.current.rotation.x = rotationValue.get() * 0.5; // Slight tilt on X-axis
+      }
     }
   });
 
   return (
     <mesh
       ref={mesh}
-      scale={scale}
-      position={[0, 0, 0]}
+      // scale={scale}
+      position={[0, 1.5, 0]}
       onPointerOver={() => (hover.current = true)}
       onPointerOut={() => (hover.current = false)}
     >
