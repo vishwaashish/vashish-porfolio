@@ -1,31 +1,73 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0 0 0);
+  --primary: oklch(0.49 0.2862 281.2);
+  --muted-foreground: oklch(0.55 0.0138 285.94);
+  --card: oklch(0.97 0.0013 286.38 / 50.2%);
+
+  --duration: 70s;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+[data-theme="dark"] {
+  --background: oklch(0.14 0 0);
+  --foreground: oklch(0.98 0 0);
+  --primary: oklch(0.49 0.2862 281.2);
+  --muted-foreground: oklch(0.79 0 0);
+  --card: oklch(0.14 0 0);
+}
+
+@theme {
+  --text-display-lg: clamp(2.5rem, 5vw + 1rem, 3.25rem); /* ~40px–52px */
+  --text-heading-md: clamp(1.75rem, 3vw + 0.5rem, 2rem); /* ~28px–32px */
+  --text-heading-sm: clamp(1.25rem, 2vw + 0.5rem, 1.5625rem); /* ~20px–25px */
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-card: var(--card);
+
+  --animate-marquee: marquee var(--duration) linear infinite;
+  --marquee-vertical: marquee-vertical var(--duration) linear infinite;
+}
+@keyframes marquee {
+  from {
+    transform: translateX(0);
   }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes marquee-vertical {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+
+@layer components {
+  p {
+    color: var(--color-muted-foreground);
+  }
+}
+
+html,
+body {
+  scroll-behavior: smooth;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  height: 100%;
+  color: var(--color-foreground);
+  background: var(--color-background);
   font-family: Arial, Helvetica, sans-serif;
+  scroll-behavior: smooth;
 }
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-}
-
 
 #blob {
   position: fixed;
@@ -36,8 +78,45 @@ body {
   width: 100vw;
 }
 
-/* h1{
+.bg-mask {
+  --mask-position-x: 50%;
+  --mask-position-y: 10%;
+  --mask-radius: 100vh;
+  --dots-color: var(--color-primary);
+  /* --dots-color: #84b5fd; */
+  --dots-size: 0.125rem;
+  --static-transparent: #00000000;
+
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+  mask-size: 100% 100%;
+  mask-image: radial-gradient(
+    var(--mask-radius) at var(--mask-position-x) var(--mask-position-y),
+    black 0,
+    transparent 100%
+  );
+}
+
+.bg-mask::after {
+  content: "";
   position: absolute;
-  font-size: 3rem;
-  font-weight: 700;
-} */
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(
+    var(--dots-color) 1px,
+    var(--static-transparent) 1px
+  );
+  background-size: var(--dots-size) var(--dots-size);
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+.container {
+  width: min(100% - 2rem, 1280px);
+  margin-inline: auto;
+}

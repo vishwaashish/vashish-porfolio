@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
+import { ThemeProvider } from "next-themes";
 import localFont from "next/font/local";
 import "./globals.css";
+import Header from "@/components/header";
+import { LenisWapper } from "@/components/lenis";
 
-const geistSans = localFont({
+export const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
   weight: "100 900",
 });
+
 const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
@@ -24,11 +28,33 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" data-theme="dark" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${geistSans.className} antialiased`}
       >
-        {children}
+        <ThemeProvider
+          attribute="data-theme"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+          storageKey="theme"
+        >
+          {/* <LenisWapper> */}
+          <Header />
+          <div className="bg-mask"></div>
+
+          {children}
+          <footer className="text-center py-4">
+            {" "}
+            <p>
+              © {new Date().getFullYear()} /{" "}
+              <span className="text-foreground font-medium">
+                Ashishkumar Vishwakarma
+              </span>
+            </p>{" "}
+          </footer>
+          {/* </LenisWapper> */}
+        </ThemeProvider>
       </body>
     </html>
   );
