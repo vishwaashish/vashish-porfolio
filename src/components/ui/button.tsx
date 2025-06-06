@@ -4,13 +4,13 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex shrink-0 cursor-pointer select-none flex-wrap items-center justify-center text-center leading-[1em] gap-2  no-underline duration-[0.2s] ease-out transition-[color,background-color,border-color,opacity,box-shadow,transform] shadow border-transparent border-transparent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 motion-reduce:hidden  active:scale-95 disabled:cursor-not-allowed disabled:scale-100 disabled:bg-muted disabled:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  "inline-flex shrink-0 cursor-pointer select-none flex-wrap items-center justify-center text-center leading-[1em] gap-2 no-underline  shadow border-transparent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 motion-reduce:hidden active:scale-95 disabled:cursor-not-allowed disabled:scale-100 disabled:bg-muted disabled:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0",
 
   {
     variants: {
       variant: {
         contained: "bg-background text-foreground hover:bg-foreground/5",
-        outlined: "border border-border shadow-none",
+        outlined: "border  border-border shadow-none",
         ghost:
           "text-foreground shadow-none hover:bg-accent hover:text-foreground",
         text: "shadow-none cursor-auto",
@@ -120,7 +120,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           buttonVariants({ variant, size, color, rounded }),
           disableAnimation && "active:scale-0",
           noPadding && "h-auto p-0",
-          className
+          className,
+          "animate-button flex-col flex-nowrap items-center justify-center gap-2 relative  overflow-hidden",
+          !["text", "link"].includes(String(variant)) && "back-effect"
         )}
         ref={ref}
         aria-busy={loading}
@@ -128,9 +130,23 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={loading || disabled}
         {...props}
       >
-        {renderStartIcon && renderStartIcon}
-        <Slottable>{children}</Slottable>
-        {renderEndIcon && renderEndIcon}
+        <div className="effect">
+          <div className="flex items-center gap-2 relative">
+            {renderStartIcon && renderStartIcon}
+            <Slottable>{children}</Slottable>
+            {renderEndIcon && renderEndIcon}
+          </div>
+          <div className="flex items-center gap-2 absolute top-[-34.5px]">
+            {renderStartIcon && renderStartIcon}
+            <Slottable>{children}</Slottable>
+            {renderEndIcon && renderEndIcon}
+          </div>
+          <div className="flex items-center gap-2 absolute top-[-69px]">
+            {renderStartIcon && renderStartIcon}
+            <Slottable>{children}</Slottable>
+            {renderEndIcon && renderEndIcon}
+          </div>
+        </div>
       </Comp>
     );
   }

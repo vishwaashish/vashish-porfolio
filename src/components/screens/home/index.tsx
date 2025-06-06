@@ -1,3 +1,5 @@
+"use client";
+import { navigation_menu } from "@/common/data";
 import { Button } from "@/components/ui/button";
 import { Marquee } from "@/components/ui/marquee";
 import Image from "next/image";
@@ -9,33 +11,83 @@ import AboutMe from "./AboutMe";
 import Contact from "./Contact";
 import Projects from "./Projects";
 import WorkExperience from "./WorkExperience";
-import { navigation_menu } from "@/common/data";
+import BlobMain from "./BlobMain";
+import { useTypingText } from "@/components/useTypingText";
+import { motion } from "motion/react";
+
+const marqueeText = [
+  ["LET'S CREATE SOMETHING AMAZING "],
+  ["DESIGNING THE FUTURE OF THE WEB "],
+  ["CREATING ENGAGING DIGITAL EXPERIENCES "],
+];
 
 export default function Home() {
-  const marqueeText = [
-    ["LET'S CREATE SOMETHING AMAZING "],
-    ["DESIGNING THE FUTURE OF THE WEB "],
-    ["CREATING ENGAGING DIGITAL EXPERIENCES "],
-  ];
+  const { word } = useTypingText(
+    [
+      "Frontend Engineer",
+      "UI/UX Engineer",
+      "React & Angular Specialist",
+      "Creative Web Architect",
+    ],
+    90,
+    20
+  );
+
+  const containerVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        staggerChildren: 0.2,
+        duration: 0.8,
+        ease: "easeOut",
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
+  };
+
   return (
     <div className="">
-      <section className="min-h-screen flex justify-center flex-wrap items-center relative" id={navigation_menu.home.id}>
-        <div className="grid grid-cols-5 gap-10 max-w-2xl container">
-          <div className="col-span-2">
+      <BlobMain />
+
+      <motion.section
+        className="min-h-screen flex justify-center flex-wrap items-center relative"
+        id={navigation_menu.home.id}
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.div
+          className="grid grid-cols-5 gap-10 max-w-2xl container"
+          variants={containerVariants}
+        >
+          <motion.div className="col-span-2" variants={itemVariants}>
             <Image
               src="/ashish-profile.png"
               className="rounded-full"
               width={1000}
               height={1000}
               alt="Ashish Porfolio"
+              id="home-profile-image"
+              // ref={profileImageRef}
             ></Image>
-          </div>
-          <div className="flex flex-col gap-3 col-span-3">
-            <h2 className="text-heading-sm">
+          </motion.div>
+          <motion.div
+            className="flex flex-col gap-3 col-span-3"
+            variants={itemVariants}
+          >
+            <h2 className="text-lg">
               Hi, I am a{" "}
-              <span className="text-primary font-bold font-geist">
-                Frontend developer{" "}
-              </span>
+              <span className="text-primary font-bold font-geist">{word}</span>
             </h2>
             <h1 className="text-display-lg font-[900] leading-14   ">
               Ashishkumar Vishwakarma
@@ -47,7 +99,7 @@ export default function Home() {
             </p>
 
             <div className="flex gap-3 mt-2">
-              <Button startIcon={<SlSocialGithub />} variant={"outlined"}>
+              <Button startIcon={<SlSocialGithub />}  variant={"outlined"}>
                 Github
               </Button>
               <Button startIcon={<RiLinkedinLine />} variant={"outlined"}>
@@ -57,10 +109,10 @@ export default function Home() {
                 Email
               </Button>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        <div className="absolute bottom-12">
+        <motion.div className="absolute bottom-12" variants={itemVariants}>
           <Button
             variant={"text"}
             startIcon={<MdKeyboardDoubleArrowDown />}
@@ -68,10 +120,14 @@ export default function Home() {
           >
             Scroll to more
           </Button>
-        </div>
-      </section>
+        </motion.div>
+      </motion.section>
 
+      <div className="h-52"></div>
+
+      {/* <div ref={workExperienceRef}> */}
       <WorkExperience />
+      {/* </div> */}
       <Projects />
       <AboutMe />
       <section className="overflow-hidden mt-48">
@@ -83,6 +139,7 @@ export default function Home() {
                 pauseOnHover
                 reverse={index % 2 == 0}
                 speed={2}
+                id="marque-text"
               >
                 {marque.map((marqueText) => (
                   <span

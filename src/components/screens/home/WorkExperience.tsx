@@ -23,6 +23,7 @@ const WorkExperience = () => {
                   <div className="flex flex-wrap gap-2 items-center justify-between">
                     <Image
                       className="h-12 w-auto"
+                      id={item.company}
                       src={item.companyLogo}
                       width={200}
                       height={100}
@@ -73,6 +74,7 @@ const WorkExperience = () => {
                 </div>
               );
             })}
+            <div id="blob-work-experience"></div>
           </div>
         </div>
       </div>

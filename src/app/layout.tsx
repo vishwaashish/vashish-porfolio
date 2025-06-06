@@ -41,10 +41,11 @@ export default function RootLayout({
         >
           {/* <LenisWapper> */}
           <Header />
+          
           <div className="bg-mask"></div>
 
           {children}
-          <footer className="text-center py-4">
+          <footer className="text-center py-4" id="footer">
             {" "}
             <p>
               © {new Date().getFullYear()} /{" "}
